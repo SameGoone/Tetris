@@ -12,23 +12,32 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
+        PlayingField field;
+        Graphics g;
+        Pen blackPen;
+        Brush blackBrush;
         public Form1()
         {
             InitializeComponent();
+            g = panel1.CreateGraphics();
+            blackPen = new Pen(Color.Black);
+            blackBrush = Brushes.Black;
+            int width = 10;
+            int height = 15;
+            field = new PlayingField(width, height);
+            Draw();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            int width = 10;
-            int height = 15;
-            PlayingField field = new PlayingField(width, height);
+        }
+
+        private void Draw()
+        {
             Cell[,] cells = field.cells;
-            for (int i = 0; i < width; i++)
+            foreach(Cell cell in cells)
             {
-                for (int j = 0; j < height; j++)
-                {
-                    textBox1.Text += $"Ячейка({i}, {j}):{cells[i, j].X}, {cells[i, j].Y}\r\n";
-                }
+                g.FillRectangle(blackBrush, cell.X, cell.Y, PlayingField.CellSize, PlayingField.CellSize);
             }
         }
     }

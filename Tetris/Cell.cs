@@ -13,12 +13,11 @@ namespace Tetris
 
         public bool IsFilled { get; private set; }
 
-        private const int size = 50;
 
         public Cell(int numberX, int numberY, bool isFilled)
         {
-            X = numberX * size;
-            Y = numberY * size;
+            X = numberX * PlayingField.CellSize;
+            Y = numberY * PlayingField.CellSize;
             IsFilled = isFilled;
         }
     }
