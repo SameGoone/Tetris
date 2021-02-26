@@ -19,6 +19,22 @@ namespace Tetris
             }
         }
 
+        public bool CanRighter
+        {
+            get
+            {
+                return X < Controller.WIDTH - 1 && !Controller.PlayingField.Cells[X + 1, Y];
+            }
+        }
+
+        public bool CanLefter
+        {
+            get
+            {
+                return X > 0 && !Controller.PlayingField.Cells[X - 1, Y];
+            }
+        }
+
         public FigurePart(int x, int y)
         {
             X = x;
@@ -28,6 +44,16 @@ namespace Tetris
         public void Lower()
         {
             Y++;
+        }
+
+        public void Righter()
+        {
+            X++;
+        }
+
+        public void Lefter()
+        {
+            X--;
         }
     }
 }

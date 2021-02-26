@@ -37,6 +37,54 @@ namespace Tetris
             return canLower;
         }
 
+        public void Righter()
+        {
+            bool allPartsCanLRighter = CheckAllPartsCanRighter();
+            if (allPartsCanLRighter)
+            {
+                foreach (FigurePart part in Parts)
+                    part.Righter();
+            }
+        }
+
+        private bool CheckAllPartsCanRighter()
+        {
+            bool canRigher = true;
+            foreach (FigurePart part in Parts)
+            {
+                if (!part.CanRighter)
+                {
+                    canRigher = false;
+                    break;
+                }
+            }
+            return canRigher;
+        }
+
+        public void Lefter()
+        {
+            bool allPartsCanLLefter = CheckAllPartsCanLefter();
+            if (allPartsCanLLefter)
+            {
+                foreach (FigurePart part in Parts)
+                    part.Lefter();
+            }
+        }
+
+        private bool CheckAllPartsCanLefter()
+        {
+            bool canLefter = true;
+            foreach (FigurePart part in Parts)
+            {
+                if (!part.CanLefter)
+                {
+                    canLefter = false;
+                    break;
+                }
+            }
+            return canLefter;
+        }
+
         public abstract void Rotate();
 
         private void Bake()

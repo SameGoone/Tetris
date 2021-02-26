@@ -14,33 +14,30 @@ namespace Tetris
     {
         Random r = new Random();
         PlayingField field;
-        Graphics g;
-        Bitmap canvas;
         public Form1()
         {
             InitializeComponent();
-
-            SetFormSize();
 
             field = new PlayingField(Controller.WIDTH, Controller.HEIGHT);
             Controller.PlayingField = field;
 
             Controller.GenerateFigure();
-
-            panel1.BackgroundImage = canvas;
-            VisualUpdate();
         }
 
-        private void SetFormSize()
+        private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            Size formSize = new Size(Controller.WIDTH * WinFormAdapter.CellSize,
-                                     Controller.HEIGHT * WinFormAdapter.CellSize);
-            this.Size = formSize;
-            panel1.Size = formSize;
-            canvas = new Bitmap(formSize.Width, formSize.Height);
+            Graphics g = e.Graphics;
+
+            VisualUpdate(g);
         }
 
-        private void DrawField()
+        private void VisualUpdate(Graphics g)
+        {
+            DrawField(g);
+            DrawActiveFigure(g);
+        }
+
+        private void DrawField(Graphics g)
         {
             bool[,] cells = field.Cells;
             for (int i = 0; i < Controller.WIDTH; i++)
@@ -48,44 +45,65 @@ namespace Tetris
                 for (int j = 0; j < Controller.HEIGHT; j++)
                 {
                     bool cell = cells[i, j];
-                    Brush brush = cell ? Brushes.Black : Brushes.Yellow;
-                    Rectangle rect = WinFormAdapter.GetRect(i, j);
-                    g.FillRectangle(brush, rect);
+                    if (cell) // если закрашена
+                    {
+                        Rectangle rect = WinFormAdapter.GetRect(i, j);
+                        g.FillRectangle(Brushes.Black, rect);
+                    }
                 }
             }
         }
-        
-        private void DrawActiveFigure()
+
+        private void DrawActiveFigure(Graphics g)
         {
-            string coords = "";
             foreach(FigurePart part in Controller.CurrentFigure.Parts)
             {
                 Brush brush = Brushes.Black;
                 Rectangle rect = WinFormAdapter.GetRect(part.X, part.Y);
-                coords += $"{part.X}, {part.Y}";
                 g.FillRectangle(brush, rect);
-                g.DrawString(coords, new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
+                g.DrawString($"Очки: {Controller.Score}", new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+
+        private void Refresher_Tick(object sender, EventArgs e)
+        {
+            Invalidate();
+            if (Controller.CheckDefeat())
+            {
+                Close();
+            }
+
+            Controller.CheckLine();
+        }
+
+        private void StepDown_Tick(object sender, EventArgs e)
         {
             Controller.CurrentFigure.Lower();
-            VisualUpdate();
         }
 
-        private void VisualUpdate()
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            g.Clear(Color.White);
-            DrawField();
-            DrawActiveFigure();
-            g.DrawLine(Pens.Black, new Point(r.Next(10, 20), r.Next(10, 20)), new Point(r.Next(100, 200), r.Next(100, 200)));
-            Refresh();
+            if (e.KeyCode == Keys.D)
+            {
+                Controller.CurrentFigure.Righter();
+            }
+            else if (e.KeyCode == Keys.A)
+            {
+                Controller.CurrentFigure.Lefter();
+            }
+            else if (e.KeyCode == Keys.S)
+            {
+                StepDown.Interval = 20;
+            }
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            g = e.Graphics;
+            if (e.KeyCode == Keys.S)
+            {
+                StepDown.Interval = 1000;
+            }
         }
     }
 }
