@@ -12,33 +12,80 @@ namespace Tetris
 {
     public partial class Form1 : Form
     {
+        Random r = new Random();
         PlayingField field;
         Graphics g;
-        Pen blackPen;
-        Brush blackBrush;
+        Bitmap canvas;
         public Form1()
         {
             InitializeComponent();
-            g = panel1.CreateGraphics();
-            blackPen = new Pen(Color.Black);
-            blackBrush = Brushes.Black;
-            int width = 10;
-            int height = 15;
-            field = new PlayingField(width, height);
-            Draw();
+
+            SetFormSize();
+
+            field = new PlayingField(Controller.WIDTH, Controller.HEIGHT);
+            Controller.PlayingField = field;
+
+            Controller.GenerateFigure();
+
+            panel1.BackgroundImage = canvas;
+            VisualUpdate();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void SetFormSize()
         {
+            Size formSize = new Size(Controller.WIDTH * WinFormAdapter.CellSize,
+                                     Controller.HEIGHT * WinFormAdapter.CellSize);
+            this.Size = formSize;
+            panel1.Size = formSize;
+            canvas = new Bitmap(formSize.Width, formSize.Height);
         }
 
-        private void Draw()
+        private void DrawField()
         {
-            Cell[,] cells = field.cells;
-            foreach(Cell cell in cells)
+            bool[,] cells = field.Cells;
+            for (int i = 0; i < Controller.WIDTH; i++)
             {
-                g.FillRectangle(blackBrush, cell.X, cell.Y, PlayingField.CellSize, PlayingField.CellSize);
+                for (int j = 0; j < Controller.HEIGHT; j++)
+                {
+                    bool cell = cells[i, j];
+                    Brush brush = cell ? Brushes.Black : Brushes.Yellow;
+                    Rectangle rect = WinFormAdapter.GetRect(i, j);
+                    g.FillRectangle(brush, rect);
+                }
             }
+        }
+        
+        private void DrawActiveFigure()
+        {
+            string coords = "";
+            foreach(FigurePart part in Controller.CurrentFigure.Parts)
+            {
+                Brush brush = Brushes.Black;
+                Rectangle rect = WinFormAdapter.GetRect(part.X, part.Y);
+                coords += $"{part.X}, {part.Y}";
+                g.FillRectangle(brush, rect);
+                g.DrawString(coords, new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Controller.CurrentFigure.Lower();
+            VisualUpdate();
+        }
+
+        private void VisualUpdate()
+        {
+            g.Clear(Color.White);
+            DrawField();
+            DrawActiveFigure();
+            g.DrawLine(Pens.Black, new Point(r.Next(10, 20), r.Next(10, 20)), new Point(r.Next(100, 200), r.Next(100, 200)));
+            Refresh();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            g = e.Graphics;
         }
     }
 }
