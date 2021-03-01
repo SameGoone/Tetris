@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Tetris
 {
-    class WinFormAdapter
+    internal class WinFormAdapter
     {
         public const int CellSize = 50;
         public static Point GetLocation(int x, int y)

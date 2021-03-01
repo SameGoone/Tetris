@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Tetris
 {
     public partial class Form1 : Form
     {
-        Random r = new Random();
-        PlayingField field;
+        private Random r = new Random();
+        private PlayingField field;
         public Form1()
         {
             InitializeComponent();
@@ -56,7 +50,7 @@ namespace Tetris
 
         private void DrawActiveFigure(Graphics g)
         {
-            foreach(FigurePart part in Controller.CurrentFigure.Parts)
+            foreach (FigurePart part in Controller.CurrentFigure.Parts)
             {
                 Brush brush = Brushes.Black;
                 Rectangle rect = WinFormAdapter.GetRect(part.X, part.Y);
