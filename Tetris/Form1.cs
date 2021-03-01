@@ -12,6 +12,7 @@ namespace Tetris
         {
             InitializeComponent();
             controller = new Controller();
+            StepDown.Interval = controller.NormalTimeBetweenSteps;
             controller.GenerateFigure();
         }
 

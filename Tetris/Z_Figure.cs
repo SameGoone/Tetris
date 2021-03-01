@@ -21,17 +21,35 @@ namespace Tetris
         {
             if (state == 0)
             {
-                state = 1;
-                Parts[0].ChangePos(1, -1);
-                Parts[2].ChangePos(-1, -1);
-                Parts[3].ChangePos(-2, 0);
+                Vector2 delta0 = new Vector2(1, -1);
+                Vector2 delta2 = new Vector2(-1, -1);
+                Vector2 delta3 = new Vector2(-2, 0);
+
+                if (Parts[0].CanChangePos(delta0) &&
+                Parts[2].CanChangePos(delta2) &&
+                Parts[3].CanChangePos(delta3))
+                {
+                    state = 1;
+                    Parts[0].ChangePos(delta0);
+                    Parts[2].ChangePos(delta2);
+                    Parts[3].ChangePos(delta3);
+                }
             }
             else
             {
-                state = 0;
-                Parts[0].ChangePos(-1, 1);
-                Parts[2].ChangePos(1, 1);
-                Parts[3].ChangePos(2, 0);
+                Vector2 delta0 = new Vector2(-1, 1);
+                Vector2 delta2 = new Vector2(1, 1);
+                Vector2 delta3 = new Vector2(2, 0);
+
+                if (Parts[0].CanChangePos(delta0) &&
+                Parts[2].CanChangePos(delta2) &&
+                Parts[3].CanChangePos(delta3))
+                {
+                    state = 0;
+                    Parts[0].ChangePos(delta0);
+                    Parts[2].ChangePos(delta2);
+                    Parts[3].ChangePos(delta3);
+                }
             }
         }
     }

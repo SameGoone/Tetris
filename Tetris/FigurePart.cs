@@ -42,11 +42,26 @@
             controller = Controller.instance;
         }
 
-        public void ChangePos(int deltaX, int deltaY)
+        public bool CanChangePos(Vector2 deltaPos)
         {
-            int newX
-            X += deltaX;
-            Y += deltaY;
+            bool[,] cells = controller.Cells;
+            int playingWidth = cells.GetLength(0);
+            int playingHeight = cells.GetLength(1);
+
+            int newX = X + deltaPos.x;
+            int newY = Y + deltaPos.y;
+
+            bool canChangePos = newX < playingWidth && newX >= 0
+                             && newY < playingHeight && newY >= 0
+                             && !cells[newX, newY];
+
+            return canChangePos;
+        }
+
+        public void ChangePos(Vector2 deltaPos)
+        {
+            X += deltaPos.x;
+            Y += deltaPos.y;
         }
 
         public void Lower()

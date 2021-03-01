@@ -13,6 +13,18 @@ namespace Tetris
         T_Figure
     }
 
+    public struct Vector2
+    {
+        public readonly int x;
+        public readonly int y;
+
+        public Vector2(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     public class Controller
     {
         public static Controller instance;
@@ -35,7 +47,7 @@ namespace Tetris
 
         public int FastTimeBetweenSteps { get; private set; } = 20;
 
-        private int[] normalTimesBetweenSteps = new int[] { 1000, 850, 700, 650, 500 };
+        private int[] normalTimesBetweenSteps = new int[] { 500, 850, 700, 650, 500 };
 
         public Controller()
         {
