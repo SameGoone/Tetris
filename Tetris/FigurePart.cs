@@ -1,31 +1,36 @@
 ﻿namespace Tetris
 {
+    public enum Direction
+    {
+        Righter,
+        Lefter,
+        Lower
+    }
     public class FigurePart
     {
         public int X { get; private set; }
         public int Y { get; private set; }
 
-        public bool CanLower
-        {
-            get
-            {
-                return Y < Controller.HEIGHT - 1 && !Controller.PlayingField.Cells[X, Y + 1];
-            }
-        }
+        private Controller controller;
 
-        public bool CanRighter
+        public bool CheckPossibilityOfShifting(Direction direction)
         {
-            get
-            {
-                return X < Controller.WIDTH - 1 && !Controller.PlayingField.Cells[X + 1, Y];
-            }
-        }
+            bool[,] cells = controller.Cells;
+            int width = cells.GetLength(0);
+            int height = cells.GetLength(1);
 
-        public bool CanLefter
-        {
-            get
+            switch (direction)
             {
-                return X > 0 && !Controller.PlayingField.Cells[X - 1, Y];
+                case Direction.Lower:
+                    return Y < height - 1 && !cells[X, Y + 1];
+
+                case Direction.Righter:
+                    return X < width - 1 && !cells[X + 1, Y];
+
+                case Direction.Lefter:
+                    return X > 0 && !cells[X - 1, Y];
+
+                default: return false;
             }
         }
 
@@ -33,6 +38,15 @@
         {
             X = x;
             Y = y;
+
+            controller = Controller.instance;
+        }
+
+        public void ChangePos(int deltaX, int deltaY)
+        {
+            int newX
+            X += deltaX;
+            Y += deltaY;
         }
 
         public void Lower()

@@ -3,10 +3,19 @@
     public abstract class Figure
     {
         public FigurePart[] Parts { get; protected set; }
+        public Controller controller;
+
+        protected int state;
+
+        public Figure()
+        {
+            controller = Controller.instance;
+            state = 0;
+        }
 
         public void Lower()
         {
-            bool allPartsCanLower = CheckAllPartsCanLower();
+            bool allPartsCanLower = CheckAllPartsCanShifting(Direction.Lower);
             if (allPartsCanLower)
             {
                 foreach (FigurePart part in Parts)
@@ -16,23 +25,9 @@
                 Bake();
         }
 
-        private bool CheckAllPartsCanLower()
-        {
-            bool canLower = true;
-            foreach (FigurePart part in Parts)
-            {
-                if (!part.CanLower)
-                {
-                    canLower = false;
-                    break;
-                }
-            }
-            return canLower;
-        }
-
         public void Righter()
         {
-            bool allPartsCanLRighter = CheckAllPartsCanRighter();
+            bool allPartsCanLRighter = CheckAllPartsCanShifting(Direction.Righter);
             if (allPartsCanLRighter)
             {
                 foreach (FigurePart part in Parts)
@@ -40,23 +35,9 @@
             }
         }
 
-        private bool CheckAllPartsCanRighter()
-        {
-            bool canRigher = true;
-            foreach (FigurePart part in Parts)
-            {
-                if (!part.CanRighter)
-                {
-                    canRigher = false;
-                    break;
-                }
-            }
-            return canRigher;
-        }
-
         public void Lefter()
         {
-            bool allPartsCanLLefter = CheckAllPartsCanLefter();
+            bool allPartsCanLLefter = CheckAllPartsCanShifting(Direction.Lefter);
             if (allPartsCanLLefter)
             {
                 foreach (FigurePart part in Parts)
@@ -64,18 +45,18 @@
             }
         }
 
-        private bool CheckAllPartsCanLefter()
+        private bool CheckAllPartsCanShifting(Direction direction)
         {
-            bool canLefter = true;
+            bool canShift = true;
             foreach (FigurePart part in Parts)
             {
-                if (!part.CanLefter)
+                if (!part.CheckPossibilityOfShifting(direction))
                 {
-                    canLefter = false;
+                    canShift = false;
                     break;
                 }
             }
-            return canLefter;
+            return canShift;
         }
 
         public abstract void Rotate();
@@ -84,10 +65,10 @@
         {
             foreach (FigurePart part in Parts)
             {
-                bool[,] cells = Controller.PlayingField.Cells;
+                bool[,] cells = controller.Cells;
                 cells[part.X, part.Y] = true;
             }
-            Controller.GenerateFigure();
+            controller.GenerateFigure();
         }
     }
 }

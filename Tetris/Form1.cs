@@ -7,15 +7,12 @@ namespace Tetris
     public partial class Form1 : Form
     {
         private Random r = new Random();
-        private PlayingField field;
+        private Controller controller;
         public Form1()
         {
             InitializeComponent();
-
-            field = new PlayingField(Controller.WIDTH, Controller.HEIGHT);
-            Controller.PlayingField = field;
-
-            Controller.GenerateFigure();
+            controller = new Controller();
+            controller.GenerateFigure();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -28,15 +25,15 @@ namespace Tetris
         private void VisualUpdate(Graphics g)
         {
             DrawField(g);
-            DrawActiveFigure(g);
+            DrawCurrentFigure(g);
         }
 
         private void DrawField(Graphics g)
         {
-            bool[,] cells = field.Cells;
-            for (int i = 0; i < Controller.WIDTH; i++)
+            bool[,] cells = controller.Cells;
+            for (int i = 0; i < cells.GetLength(0); i++)
             {
-                for (int j = 0; j < Controller.HEIGHT; j++)
+                for (int j = 0; j < cells.GetLength(1); j++)
                 {
                     bool cell = cells[i, j];
                     if (cell) // если закрашена
@@ -48,14 +45,15 @@ namespace Tetris
             }
         }
 
-        private void DrawActiveFigure(Graphics g)
+        private void DrawCurrentFigure(Graphics g)
         {
-            foreach (FigurePart part in Controller.CurrentFigure.Parts)
+            Figure currentFigure = controller.CurrentFigure;
+            foreach (FigurePart part in currentFigure.Parts)
             {
                 Brush brush = Brushes.Black;
                 Rectangle rect = WinFormAdapter.GetRect(part.X, part.Y);
                 g.FillRectangle(brush, rect);
-                g.DrawString($"Очки: {Controller.Score}", new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
+                g.DrawString($"Очки: {controller.Score}", new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
             }
         }
 
@@ -63,32 +61,36 @@ namespace Tetris
         private void Refresher_Tick(object sender, EventArgs e)
         {
             Invalidate();
-            if (Controller.CheckDefeat())
+            if (controller.CheckDefeat())
             {
                 Close();
             }
 
-            Controller.CheckLine();
+            controller.CheckFilled();
         }
 
         private void StepDown_Tick(object sender, EventArgs e)
         {
-            Controller.CurrentFigure.Lower();
+            controller.ShiftCurrentFigure(Direction.Lower);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.D)
             {
-                Controller.CurrentFigure.Righter();
+                controller.ShiftCurrentFigure(Direction.Righter);
             }
             else if (e.KeyCode == Keys.A)
             {
-                Controller.CurrentFigure.Lefter();
+                controller.ShiftCurrentFigure(Direction.Lefter);
             }
             else if (e.KeyCode == Keys.S)
             {
-                StepDown.Interval = 20;
+                StepDown.Interval = controller.FastTimeBetweenSteps;
+            }
+            else if (e.KeyCode == Keys.Space)
+            {
+                controller.RotateCurrentFigure();
             }
         }
 
@@ -96,7 +98,7 @@ namespace Tetris
         {
             if (e.KeyCode == Keys.S)
             {
-                StepDown.Interval = 1000;
+                StepDown.Interval = controller.NormalTimeBetweenSteps;
             }
         }
     }

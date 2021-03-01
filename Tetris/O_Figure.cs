@@ -1,8 +1,8 @@
 ﻿namespace Tetris
 {
-    internal class Square : Figure
+    internal class O_Figure : Figure
     {
-        public Square()
+        public O_Figure()
         {
             Parts = new FigurePart[4];
             Parts[0] = new FigurePart(4, 0);
