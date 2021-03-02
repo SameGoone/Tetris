@@ -61,6 +61,19 @@
 
         public abstract void Rotate();
 
+        protected bool CheckAllPartsCanRotate(Vector2 delta0, Vector2 delta2, Vector2 delta3)
+        {
+            return Parts[0].CanChangePos(delta0) 
+                && Parts[2].CanChangePos(delta2) 
+                && Parts[3].CanChangePos(delta3);
+        }
+        protected void RotateAllParts(Vector2 delta0, Vector2 delta2, Vector2 delta3)
+        {
+            Parts[0].ChangePos(delta0);
+            Parts[2].ChangePos(delta2);
+            Parts[3].ChangePos(delta3);
+        }
+
         private void Bake()
         {
             foreach (FigurePart part in Parts)

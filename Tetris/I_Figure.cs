@@ -11,44 +11,40 @@ namespace Tetris
         public I_Figure()
         {
             Parts = new FigurePart[4];
-            Parts[0] = new FigurePart(4, 0);
-            Parts[1] = new FigurePart(4, 1);
-            Parts[2] = new FigurePart(4, 2);
-            Parts[3] = new FigurePart(4, 3);
+            Parts[0] = new FigurePart(4, 3);
+            Parts[1] = new FigurePart(4, 2);
+            Parts[2] = new FigurePart(4, 1);
+            Parts[3] = new FigurePart(4, 0);
         }
 
         public override void Rotate()
         {
             if (state == 0)
             {
-                Vector2 delta0 = new Vector2(-2, 2);
-                Vector2 delta1 = new Vector2(-1, 1);
-                Vector2 delta3 = new Vector2(1, -1);
+                if (Parts[0].X == 1)
+                    Righter();
 
-                if (Parts[0].CanChangePos(delta0) &&
-                Parts[1].CanChangePos(delta1) &&
-                Parts[3].CanChangePos(delta3))
+
+                Vector2 delta0 = new Vector2(1, -1);
+                Vector2 delta2 = new Vector2(-1, 1);
+                Vector2 delta3 = new Vector2(-2, 2);
+
+                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
                 {
                     state = 1;
-                    Parts[0].ChangePos(delta0);
-                    Parts[1].ChangePos(delta1);
-                    Parts[3].ChangePos(delta3);
+                    RotateAllParts(delta0, delta2, delta3);
                 }
             }
             else
             {
-                Vector2 delta0 = new Vector2(2, -2);
-                Vector2 delta1 = new Vector2(1, -1);
-                Vector2 delta3 = new Vector2(-1, 1);
+                Vector2 delta0 = new Vector2(-1, 1);
+                Vector2 delta2 = new Vector2(1, -1);
+                Vector2 delta3 = new Vector2(2, -2);
 
-                if (Parts[0].CanChangePos(delta0) &&
-                Parts[1].CanChangePos(delta1) &&
-                Parts[3].CanChangePos(delta3))
+                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
                 {
                     state = 0;
-                    Parts[0].ChangePos(delta0);
-                    Parts[1].ChangePos(delta1);
-                    Parts[3].ChangePos(delta3);
+                    RotateAllParts(delta0, delta2, delta3);
                 }
             }
         }

@@ -25,14 +25,10 @@ namespace Tetris
                 Vector2 delta2 = new Vector2(-1, -1);
                 Vector2 delta3 = new Vector2(0, -2);
 
-                if (Parts[0].CanChangePos(delta0) &&
-                Parts[2].CanChangePos(delta2) &&
-                Parts[3].CanChangePos(delta3))
+                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
                 {
                     state++;
-                    Parts[0].ChangePos(delta0);
-                    Parts[2].ChangePos(delta2);
-                    Parts[3].ChangePos(delta3);
+                    RotateAllParts(delta0, delta2, delta3);
                 }
             }
             else if (state == 1)
@@ -41,14 +37,10 @@ namespace Tetris
                 Vector2 delta2 = new Vector2(1, -1);
                 Vector2 delta3 = new Vector2(2, 0);
 
-                if (Parts[0].CanChangePos(delta0) &&
-                Parts[2].CanChangePos(delta2) &&
-                Parts[3].CanChangePos(delta3))
+                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
                 {
                     state++;
-                    Parts[0].ChangePos(delta0);
-                    Parts[2].ChangePos(delta2);
-                    Parts[3].ChangePos(delta3);
+                    RotateAllParts(delta0, delta2, delta3);
                 }
             }
             else if (state == 2)
@@ -57,14 +49,10 @@ namespace Tetris
                 Vector2 delta2 = new Vector2(1, 1);
                 Vector2 delta3 = new Vector2(0, 2);
 
-                if (Parts[0].CanChangePos(delta0) &&
-                Parts[2].CanChangePos(delta2) &&
-                Parts[3].CanChangePos(delta3))
+                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
                 {
                     state++;
-                    Parts[0].ChangePos(delta0);
-                    Parts[2].ChangePos(delta2);
-                    Parts[3].ChangePos(delta3);
+                    RotateAllParts(delta0, delta2, delta3);
                 }
             }
             else
@@ -73,14 +61,10 @@ namespace Tetris
                 Vector2 delta2 = new Vector2(-1, 1);
                 Vector2 delta3 = new Vector2(-2, 0);
 
-                if (Parts[0].CanChangePos(delta0) &&
-                Parts[2].CanChangePos(delta2) &&
-                Parts[3].CanChangePos(delta3))
+                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
                 {
                     state = 0;
-                    Parts[0].ChangePos(delta0);
-                    Parts[2].ChangePos(delta2);
-                    Parts[3].ChangePos(delta3);
+                    RotateAllParts(delta0, delta2, delta3);
                 }
             }
         }
