@@ -63,9 +63,9 @@ namespace TetrisWinForms {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Cell1 {
+        internal static System.Drawing.Bitmap Cell2 {
             get {
-                object obj = ResourceManager.GetObject("Cell1", resourceCulture);
+                object obj = ResourceManager.GetObject("Cell2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -40,6 +40,7 @@ namespace TetrisMechanics
         public int FasterStepSpeed { get; private set; } = 35;
 
         public event Action OnFigureBaked;
+        public event Action OnDefeat;
 
         public int NormalStepSpeed
         {
@@ -49,7 +50,7 @@ namespace TetrisMechanics
             }
         }
 
-        private int[] normalStepSpeeds = new int[] { 700, 600, 500, 450, 400, 350, 300, 250, 200, 150, 100 };
+        private int[] normalStepSpeeds = new int[] { 700, 600, 500, 450, 400, 350, 300, 275, 250, 225, 200, 175, 150, 130, 110, 100, 90, 85, 75, 70 };
 
         private readonly int scoreToUp = 300;
 
@@ -106,18 +107,16 @@ namespace TetrisMechanics
             GenerateNewFigure();
         }
 
-        public bool CheckDefeat()
+        public void CheckDefeat()
         {
-            bool isDefeat = false;
             for (int i = 0; i < WIDTH; i++)
             {
                 if (Cells[i, 0])
                 {
-                    isDefeat = true;
+                    OnDefeat();
                     break;
                 }
             }
-            return isDefeat;
         }
 
         public void CheckFilled()
@@ -161,8 +160,7 @@ namespace TetrisMechanics
 
             Score += countOfLines * 100;
 
-            if (Score >= Level * scoreToUp && Level < normalStepSpeeds.Length - 1)
-                Level++;
+            ChangeLevel();
 
             for (int j = upperLine; j <= lowerLine; j++)
                 for (int i = 0; i < WIDTH; i++)
@@ -178,8 +176,15 @@ namespace TetrisMechanics
             }
         }
 
+        private void ChangeLevel()
+        {
+            if (Score >= Level * scoreToUp && Level < normalStepSpeeds.Length)
+                Level++;
+        }
+
         public void ShiftCurrentFigure(Direction direction)
         {
+
             switch (direction)
             {
                 case Direction.Righter:

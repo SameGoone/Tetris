@@ -5,29 +5,39 @@ using TetrisMechanics;
 
 namespace TetrisWinForms
 {
-    public partial class Form1 : Form
+    public partial class Game : Form
     {
-        private Random r = new Random();
         private Controller controller;
-        Image cellImage;
-        public Form1()
+        private Image cellImage;
+        private Menu menuWindow;
+        public Game(Menu menuWindow)
         {
             InitializeComponent();
-            cellImage = Resources.Cell1;
+            this.menuWindow = menuWindow;
+            cellImage = Resources.Cell2;
             controller = new Controller();
             StepDown.Interval = controller.NormalStepSpeed;
             controller.GenerateNewFigure();
             controller.OnFigureBaked += Controller_OnFigureBaked;
+            controller.OnDefeat += Controller_OnDefeat;
         }
-         
+
+        private void Controller_OnDefeat()
+        {
+            Close();
+            MessageBox.Show($"Заработано очков: {controller.Score}\r\nДостигнут уровень: {controller.Level}", "Результаты");
+        }
+
+        private void Game_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            menuWindow.Show();
+        }
+
         private void Controller_OnFigureBaked()
         {
             StepDown.Interval = controller.NormalStepSpeed;
 
-            if (controller.CheckDefeat())
-            {
-                Close();
-            }
+            controller.CheckDefeat();
 
             controller.CheckFilled();
         }
@@ -41,7 +51,7 @@ namespace TetrisWinForms
 
         private void VisualUpdate(Graphics g)
         {
-            DrawGrid(g);
+            //DrawGrid(g);
             DrawField(g);
             DrawCurrentFigure(g);
             DrawStats(g);
@@ -49,14 +59,14 @@ namespace TetrisWinForms
 
         private void DrawGrid(Graphics g)
         {
-            Pen pen = Pens.Black;
+            Pen pen = Pens.Silver;
             int width = controller.Cells.GetLength(0);
             int height = controller.Cells.GetLength(1);
             int cellSize = WinFormAdapter.CELL_SIZE;
-            for (int i = 1; i < width; i++)
+            for (int i = 1; i <= width; i++)
                 g.DrawLine(pen, new Point(cellSize * i, 0), new Point(cellSize * i, cellSize * height));
-            for (int j = 1; j < Height; j++)
-                g.DrawLine(pen, new Point(0, cellSize * j), new Point(cellSize * height, cellSize * j));
+            for (int j = 1; j <= height; j++)
+                g.DrawLine(pen, new Point(0, cellSize * j), new Point(cellSize * width, cellSize * j));
         }
 
         private void DrawField(Graphics g)
