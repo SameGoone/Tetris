@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 
 namespace Tetris
 {
@@ -30,24 +31,29 @@ namespace Tetris
         public static Controller instance;
 
         private const int WIDTH = 10;
-        private const int HEIGHT = 15;
+        private const int HEIGHT = 20;
         public bool[,] Cells { get; private set; }
         public int Score { get; private set; } = 0;
         public Figure CurrentFigure;
 
         public int Level { get; private set; }
 
-        public int NormalTimeBetweenSteps
+        public int FasterStepSpeed { get; private set; } = 35;
+
+        public event Action OnFigureBaked;
+
+        public int NormalStepSpeed
         {
             get
             {
-                return normalTimesBetweenSteps[Level];
+                return normalStepSpeeds[Level - 1];
             }
         }
 
-        public int FastTimeBetweenSteps { get; private set; } = 20;
+        private int[] normalStepSpeeds = new int[] { 700, 600, 500, 450, 400, 350, 300, 250, 200, 150, 100 };
 
-        private int[] normalTimesBetweenSteps = new int[] { 500, 850, 700, 650, 500 };
+        private readonly int scoreToUp = 300;
+
 
         public Controller()
         {
@@ -55,10 +61,10 @@ namespace Tetris
                 instance = this;
 
             Cells = new bool[WIDTH, HEIGHT];
-            Level = 0;
+            Level = 1;
         }
 
-        public void GenerateFigure()
+        public void GenerateNewFigure()
         {
             Figures newFigure = GetRandomEnum<Figures>();
 
@@ -92,6 +98,13 @@ namespace Tetris
                     CurrentFigure = new T_Figure();
                     break;
             }
+            CurrentFigure.OnBaked += CurrentFigure_OnBaked;
+        }
+
+        private void CurrentFigure_OnBaked()
+        {
+            OnFigureBaked();
+            GenerateNewFigure();
         }
 
         public bool CheckDefeat()
@@ -148,6 +161,9 @@ namespace Tetris
                 return;
 
             Score += countOfLines * 100;
+
+            if (Score >= Level * scoreToUp && Level < normalStepSpeeds.Length - 1)
+                Level++;
 
             for (int j = upperLine; j <= lowerLine; j++)
                 for (int i = 0; i < WIDTH; i++)

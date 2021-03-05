@@ -1,16 +1,42 @@
-﻿namespace Tetris
+﻿using System;
+
+namespace Tetris
 {
     public abstract class Figure
     {
         public FigurePart[] Parts { get; protected set; }
+
+        public Vector2 MainPos
+        {
+            get
+            {
+                return Parts[0].Pos;
+            }
+        }
+
         public Controller controller;
 
+        protected Vector2[,] States;
+
         protected int state;
+
+        public event Action OnBaked;
 
         public Figure()
         {
             controller = Controller.instance;
+            Parts = new FigurePart[4];
             state = 0;
+        }
+
+        protected void InitializeParts(int mainX, int mainY)
+        {
+            Parts[0] = new FigurePart(new Vector2(mainX, mainY));
+            for (int i = 1; i < Parts.Length; i++)
+            {
+                Vector2 pos = new Vector2(MainPos.x + States[0, i].x, MainPos.y + States[0, i].y);
+                Parts[i] = new FigurePart(pos);
+            }
         }
 
         public void Lower()
@@ -61,17 +87,24 @@
 
         public abstract void Rotate();
 
-        protected bool CheckAllPartsCanRotate(Vector2 delta0, Vector2 delta2, Vector2 delta3)
+        protected void SetState(int stateIndex)
         {
-            return Parts[0].CanChangePos(delta0) 
-                && Parts[2].CanChangePos(delta2) 
-                && Parts[3].CanChangePos(delta3);
+            if (CheckAllPartsCanChangePos(stateIndex))
+            {
+                state = stateIndex;
+                for (int i = 1; i < Parts.Length; i++)
+                {
+                    Vector2 pos = new Vector2(MainPos.x + States[stateIndex, i].x, MainPos.y + States[stateIndex, i].y);
+                    Parts[i].SetPosition(pos);
+                }
+            }
         }
-        protected void RotateAllParts(Vector2 delta0, Vector2 delta2, Vector2 delta3)
+
+        protected bool CheckAllPartsCanChangePos(int stateIndex)
         {
-            Parts[0].ChangePos(delta0);
-            Parts[2].ChangePos(delta2);
-            Parts[3].ChangePos(delta3);
+            return Parts[1].CanChangePos(MainPos, States[stateIndex, 1])
+                && Parts[2].CanChangePos(MainPos, States[stateIndex, 2])
+                && Parts[3].CanChangePos(MainPos, States[stateIndex, 3]);
         }
 
         private void Bake()
@@ -79,9 +112,9 @@
             foreach (FigurePart part in Parts)
             {
                 bool[,] cells = controller.Cells;
-                cells[part.X, part.Y] = true;
+                cells[part.Pos.x, part.Pos.y] = true;
             }
-            controller.GenerateFigure();
+            OnBaked();
         }
     }
 }

@@ -8,8 +8,7 @@
     }
     public class FigurePart
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public Vector2 Pos { get; private set; }
 
         private Controller controller;
 
@@ -22,34 +21,33 @@
             switch (direction)
             {
                 case Direction.Lower:
-                    return Y < height - 1 && !cells[X, Y + 1];
+                    return Pos.y < height - 1 && !cells[Pos.x, Pos.y + 1];
 
                 case Direction.Righter:
-                    return X < width - 1 && !cells[X + 1, Y];
+                    return Pos.x < width - 1 && !cells[Pos.x + 1, Pos.y];
 
                 case Direction.Lefter:
-                    return X > 0 && !cells[X - 1, Y];
+                    return Pos.x > 0 && !cells[Pos.x - 1, Pos.y];
 
                 default: return false;
             }
         }
 
-        public FigurePart(int x, int y)
+        public FigurePart(Vector2 pos)
         {
-            X = x;
-            Y = y;
+            Pos = pos;
 
             controller = Controller.instance;
         }
 
-        public bool CanChangePos(Vector2 deltaPos)
+        public bool CanChangePos(Vector2 mainPos, Vector2 deltaPos)
         {
             bool[,] cells = controller.Cells;
             int playingWidth = cells.GetLength(0);
             int playingHeight = cells.GetLength(1);
 
-            int newX = X + deltaPos.x;
-            int newY = Y + deltaPos.y;
+            int newX = mainPos.x + deltaPos.x;
+            int newY = mainPos.y + deltaPos.y;
 
             bool canChangePos = newX < playingWidth && newX >= 0
                              && newY < playingHeight && newY >= 0
@@ -58,25 +56,24 @@
             return canChangePos;
         }
 
-        public void ChangePos(Vector2 deltaPos)
+        public void SetPosition(Vector2 pos)
         {
-            X += deltaPos.x;
-            Y += deltaPos.y;
+            Pos = pos;
         }
 
         public void Lower()
         {
-            Y++;
+            Pos = new Vector2(Pos.x, Pos.y + 1);
         }
 
         public void Righter()
         {
-            X++;
+            Pos = new Vector2(Pos.x + 1, Pos.y);
         }
 
         public void Lefter()
         {
-            X--;
+            Pos = new Vector2(Pos.x - 1, Pos.y);
         }
     }
 }

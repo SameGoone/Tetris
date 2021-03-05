@@ -4,11 +4,12 @@
     {
         public O_Figure()
         {
-            Parts = new FigurePart[4];
-            Parts[0] = new FigurePart(4, 0);
-            Parts[1] = new FigurePart(5, 0);
-            Parts[2] = new FigurePart(4, 1);
-            Parts[3] = new FigurePart(5, 1);
+            States = new Vector2[1, 4];
+            States[0, 1] = new Vector2(1, 0);
+            States[0, 2] = new Vector2(0, 1);
+            States[0, 3] = new Vector2(1, 1);
+
+            InitializeParts(4, 0);
         }
         public override void Rotate()
         {

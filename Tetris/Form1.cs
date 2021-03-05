@@ -8,12 +8,27 @@ namespace Tetris
     {
         private Random r = new Random();
         private Controller controller;
+        Image cellImage;
         public Form1()
         {
             InitializeComponent();
+            cellImage = Resources.Cell1;
             controller = new Controller();
-            StepDown.Interval = controller.NormalTimeBetweenSteps;
-            controller.GenerateFigure();
+            StepDown.Interval = controller.NormalStepSpeed;
+            controller.GenerateNewFigure();
+            controller.OnFigureBaked += Controller_OnFigureBaked;
+        }
+         
+        private void Controller_OnFigureBaked()
+        {
+            StepDown.Interval = controller.NormalStepSpeed;
+
+            if (controller.CheckDefeat())
+            {
+                Close();
+            }
+
+            controller.CheckFilled();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -25,8 +40,22 @@ namespace Tetris
 
         private void VisualUpdate(Graphics g)
         {
+            DrawGrid(g);
             DrawField(g);
             DrawCurrentFigure(g);
+            DrawStats(g);
+        }
+
+        private void DrawGrid(Graphics g)
+        {
+            Pen pen = Pens.Black;
+            int width = controller.Cells.GetLength(0);
+            int height = controller.Cells.GetLength(1);
+            int cellSize = WinFormAdapter.CELL_SIZE;
+            for (int i = 1; i < width; i++)
+                g.DrawLine(pen, new Point(cellSize * i, 0), new Point(cellSize * i, cellSize * height));
+            for (int j = 1; j < Height; j++)
+                g.DrawLine(pen, new Point(0, cellSize * j), new Point(cellSize * height, cellSize * j));
         }
 
         private void DrawField(Graphics g)
@@ -40,7 +69,7 @@ namespace Tetris
                     if (cell) // если закрашена
                     {
                         Rectangle rect = WinFormAdapter.GetRect(i, j);
-                        g.FillRectangle(Brushes.Black, rect);
+                        g.DrawImage(cellImage, rect);
                     }
                 }
             }
@@ -51,23 +80,21 @@ namespace Tetris
             Figure currentFigure = controller.CurrentFigure;
             foreach (FigurePart part in currentFigure.Parts)
             {
-                Brush brush = Brushes.Black;
-                Rectangle rect = WinFormAdapter.GetRect(part.X, part.Y);
-                g.FillRectangle(brush, rect);
-                g.DrawString($"Очки: {controller.Score}", new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
+                Rectangle rect = WinFormAdapter.GetRect(part.Pos.x, part.Pos.y);
+                g.DrawImage(cellImage, rect);
             }
         }
 
+        private void DrawStats(Graphics g)
+        {
+            Brush brush = Brushes.Black;
+            g.DrawString($"Очки: {controller.Score}", new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 10);
+            g.DrawString($"Уровень сложности: {controller.Level}", new Font(FontFamily.GenericSansSerif.Name, 14), brush, 10, 50);
+        }
 
         private void Refresher_Tick(object sender, EventArgs e)
         {
             Invalidate();
-            if (controller.CheckDefeat())
-            {
-                Close();
-            }
-
-            controller.CheckFilled();
         }
 
         private void StepDown_Tick(object sender, EventArgs e)
@@ -77,19 +104,19 @@ namespace Tetris
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.D)
+            if (e.KeyCode == Keys.D || e.KeyCode == Keys.Right)
             {
                 controller.ShiftCurrentFigure(Direction.Righter);
             }
-            else if (e.KeyCode == Keys.A)
+            else if (e.KeyCode == Keys.A || e.KeyCode == Keys.Left)
             {
                 controller.ShiftCurrentFigure(Direction.Lefter);
             }
-            else if (e.KeyCode == Keys.S)
+            else if (e.KeyCode == Keys.S || e.KeyCode == Keys.Down)
             {
-                StepDown.Interval = controller.FastTimeBetweenSteps;
+                StepDown.Interval = controller.FasterStepSpeed;
             }
-            else if (e.KeyCode == Keys.Space)
+            else if (e.KeyCode == Keys.Space || e.KeyCode == Keys.W || e.KeyCode == Keys.Up)
             {
                 controller.RotateCurrentFigure();
             }
@@ -97,9 +124,9 @@ namespace Tetris
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.S)
+            if (e.KeyCode == Keys.S || e.KeyCode == Keys.Down)
             {
-                StepDown.Interval = controller.NormalTimeBetweenSteps;
+                StepDown.Interval = controller.NormalStepSpeed;
             }
         }
     }

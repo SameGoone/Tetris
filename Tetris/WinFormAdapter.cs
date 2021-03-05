@@ -4,7 +4,7 @@ namespace Tetris
 {
     internal class WinFormAdapter
     {
-        private const int CELL_SIZE = 50;
+        public const int CELL_SIZE = 40;
 
         public static Rectangle GetRect(int x, int y)
         {

@@ -10,42 +10,30 @@ namespace Tetris
     {
         public I_Figure()
         {
-            Parts = new FigurePart[4];
-            Parts[0] = new FigurePart(4, 3);
-            Parts[1] = new FigurePart(4, 2);
-            Parts[2] = new FigurePart(4, 1);
-            Parts[3] = new FigurePart(4, 0);
+            States = new Vector2[2, 4];
+            States[0, 1] = new Vector2(0, -2);
+            States[0, 2] = new Vector2(0, -1);
+            States[0, 3] = new Vector2(0, 1);
+
+            States[1, 1] = new Vector2(-2, 0);
+            States[1, 2] = new Vector2(-1, 0);
+            States[1, 3] = new Vector2(1, 0);
+
+            InitializeParts(5, 2);
         }
 
         public override void Rotate()
         {
             if (state == 0)
             {
-                if (Parts[0].X == 1)
+                if (MainPos.x == 1)
                     Righter();
 
-
-                Vector2 delta0 = new Vector2(1, -1);
-                Vector2 delta2 = new Vector2(-1, 1);
-                Vector2 delta3 = new Vector2(-2, 2);
-
-                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
-                {
-                    state = 1;
-                    RotateAllParts(delta0, delta2, delta3);
-                }
+                SetState(1);
             }
             else
             {
-                Vector2 delta0 = new Vector2(-1, 1);
-                Vector2 delta2 = new Vector2(1, -1);
-                Vector2 delta3 = new Vector2(2, -2);
-
-                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
-                {
-                    state = 0;
-                    RotateAllParts(delta0, delta2, delta3);
-                }
+                SetState(0);
             }
         }
     }

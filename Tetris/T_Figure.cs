@@ -10,62 +10,43 @@ namespace Tetris
     {
         public T_Figure()
         {
-            Parts = new FigurePart[4];
-            Parts[0] = new FigurePart(4, 0);
-            Parts[1] = new FigurePart(4, 1);
-            Parts[2] = new FigurePart(4, 2);
-            Parts[3] = new FigurePart(5, 1);
+            States = new Vector2[4, 4];
+            States[0, 1] = new Vector2(-1, 0);
+            States[0, 2] = new Vector2(0, -1);
+            States[0, 3] = new Vector2(1, 0);
+
+            States[1, 1] = new Vector2(0, -1);
+            States[1, 2] = new Vector2(1, 0);
+            States[1, 3] = new Vector2(0, 1);
+
+            States[2, 1] = new Vector2(1, 0);
+            States[2, 2] = new Vector2(0, 1);
+            States[2, 3] = new Vector2(-1, 0);
+
+            States[3, 1] = new Vector2(0, 1);
+            States[3, 2] = new Vector2(-1, 0);
+            States[3, 3] = new Vector2(0, -1);
+
+            InitializeParts(5, 1);
         }
 
         public override void Rotate()
         {
             if (state == 0)
             {
-                Vector2 delta0 = new Vector2(1, 1);
-                Vector2 delta2 = new Vector2(-1, -1);
-                Vector2 delta3 = new Vector2(-1, 1);
-
-                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
-                {
-                    state++;
-                    RotateAllParts(delta0, delta2, delta3);
-                }
+                SetState(1);
             }
             else if (state == 1)
             {
-                Vector2 delta0 = new Vector2(-1, 1);
-                Vector2 delta2 = new Vector2(1, -1);
-                Vector2 delta3 = new Vector2(-1, -1);
-
-                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
-                {
-                    state++;
-                    RotateAllParts(delta0, delta2, delta3);
-                }
+                SetState(2);
             }
             else if (state == 2)
             {
-                Vector2 delta0 = new Vector2(-1, -1);
-                Vector2 delta2 = new Vector2(1, 1);
-                Vector2 delta3 = new Vector2(1, -1);
-
-                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
-                {
-                    state++;
-                    RotateAllParts(delta0, delta2, delta3);
-                }
+                SetState(3);
             }
             else
             {
-                Vector2 delta0 = new Vector2(1, -1);
-                Vector2 delta2 = new Vector2(-1, 1);
-                Vector2 delta3 = new Vector2(1, 1);
-
-                if (CheckAllPartsCanRotate(delta0, delta2, delta3))
-                {
-                    state = 0;
-                    RotateAllParts(delta0, delta2, delta3);
-                }
+                SetState(0);
             }
         }
     }
