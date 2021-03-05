@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tetris
+﻿namespace TetrisMechanics
 {
-    class I_Figure : Figure
+    public class I_Figure : Figure
     {
         public I_Figure()
         {

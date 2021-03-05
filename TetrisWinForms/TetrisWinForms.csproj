@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B0F27B63-E90C-4FF6-9627-20438B192738}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Tetris</RootNamespace>
+    <RootNamespace>TetrisWinForms</RootNamespace>
     <AssemblyName>Tetris</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -46,30 +46,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Figure.cs" />
-    <Compile Include="Controller.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FigurePart.cs" />
-    <Compile Include="I_Figure.cs" />
-    <Compile Include="J_Figure.cs" />
-    <Compile Include="L_Figure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="O_Figure.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="S_Figure.cs" />
-    <Compile Include="T_Figure.cs" />
-    <Compile Include="WinFormAdapter.cs" />
-    <Compile Include="Z_Figure.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -81,6 +70,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -101,6 +91,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Cell1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TetrisMechanics\TetrisMechanics.csproj">
+      <Project>{ced7573b-9849-4390-af25-e342e2736704}</Project>
+      <Name>TetrisMechanics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

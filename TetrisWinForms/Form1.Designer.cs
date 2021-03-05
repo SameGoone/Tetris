@@ -1,5 +1,5 @@
 ﻿
-namespace Tetris
+namespace TetrisWinForms
 {
     partial class Form1
     {

@@ -1,6 +1,6 @@
-﻿namespace Tetris
+﻿namespace TetrisMechanics
 {
-    internal class O_Figure : Figure
+    public class O_Figure : Figure
     {
         public O_Figure()
         {

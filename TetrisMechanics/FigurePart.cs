@@ -1,4 +1,4 @@
-﻿namespace Tetris
+﻿namespace TetrisMechanics
 {
     public enum Direction
     {

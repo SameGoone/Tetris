@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tetris
+namespace TetrisMechanics
 {
     public abstract class Figure
     {

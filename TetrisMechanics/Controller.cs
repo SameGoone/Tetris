@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Windows.Input;
 
-namespace Tetris
+namespace TetrisMechanics
 {
     public enum Figures
     {
@@ -183,11 +182,11 @@ namespace Tetris
         {
             switch (direction)
             {
-                case Direction.Righter: 
+                case Direction.Righter:
                     CurrentFigure.Righter();
                     break;
 
-                case Direction.Lefter: 
+                case Direction.Lefter:
                     CurrentFigure.Lefter();
                     break;
 
@@ -202,7 +201,7 @@ namespace Tetris
             CurrentFigure.Rotate();
         }
 
-        static T GetRandomEnum<T>()
+        private static T GetRandomEnum<T>()
         {
             var v = Enum.GetValues(typeof(T));
             return (T)v.GetValue(new Random().Next(v.Length));

@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace Tetris
+namespace TetrisMechanics
 {
-    internal class WinFormAdapter
+    public class WinFormAdapter
     {
         public const int CELL_SIZE = 40;
 
